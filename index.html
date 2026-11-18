@@ -1,0 +1,484 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediFind | Find the Right Hospital</title>
+<style>
+:root{
+  --blue:#1769e0;--dark:#102b4e;--teal:#11a99a;
+  --light:#f3f7fc;--muted:#64748b;--white:#fff;
+  --border:#e2eaf3;--green:#16845b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--light);color:var(--dark);line-height:1.6}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+header{background:white;position:sticky;top:0;z-index:20;border-bottom:1px solid var(--border)}
+.nav{max-width:1200px;margin:auto;padding:15px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.logo{font-size:25px;font-weight:800;color:var(--blue);letter-spacing:-1px}
+.logo span{color:var(--teal)}
+.navlinks{display:flex;gap:24px;align-items:center}
+.navlinks button{border:0;background:none;color:#42536a;font-weight:600}
+.navlinks button:hover,.navlinks button.active{color:var(--blue)}
+.btn{display:inline-block;border:0;border-radius:10px;background:var(--blue);color:white;padding:11px 17px;font-weight:700}
+.btn:hover{background:#1054b9}
+.btn.secondary{background:#eaf2ff;color:var(--blue)}
+.btn.teal{background:var(--teal)}
+.btn.outline{background:white;color:var(--blue);border:1px solid #cbdcf4}
+.mobile-menu{display:none}
+.page{display:none;min-height:70vh}
+.page.active{display:block}
+.container{max-width:1200px;margin:auto;padding:0 22px}
+.hero{background:linear-gradient(120deg,#eaf3ff 0%,#f7fbff 60%,#e3f8f5 100%);padding:65px 0 55px;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:38px;align-items:center}
+.eyebrow{color:var(--blue);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1.6px;margin-bottom:12px}
+h1{font-size:clamp(35px,5vw,58px);line-height:1.12;letter-spacing:-2px;margin-bottom:18px}
+h1 span{color:var(--blue)}
+.hero p{color:#52647b;font-size:17px;max-width:570px;margin-bottom:25px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.hero-art{min-height:300px;border-radius:28px;background:linear-gradient(145deg,#c9e3ff,#e7f9f5);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.hero-art img{width:100%;height:330px;object-fit:cover;mix-blend-mode:multiply;opacity:.9}
+.art-placeholder{font-size:100px;text-align:center}
+.floating{position:absolute;background:white;padding:13px 16px;border-radius:14px;box-shadow:0 8px 30px #163f671c;font-size:13px;font-weight:700}
+.floating.one{top:22px;left:18px}.floating.two{right:15px;bottom:25px}
+.searchbox{background:white;border:1px solid var(--border);padding:17px;border-radius:16px;box-shadow:0 12px 35px #17385b0c;margin-top:32px}
+.searchrow{display:grid;grid-template-columns:1fr auto;gap:10px}
+.input{width:100%;padding:12px 13px;border:1px solid #d7e1ee;border-radius:9px;background:white;color:var(--dark);outline:none}
+.input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #1769e01b}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:24px 0}
+.stat{background:white;border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center}
+.stat strong{font-size:25px;color:var(--blue);display:block}
+.stat span{font-size:13px;color:var(--muted)}
+.section{padding:48px 0}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:23px}
+.section-head h2{font-size:29px;letter-spacing:-.7px}
+.section-head p{color:var(--muted);font-size:14px}
+.feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:17px}
+.feature{background:white;border:1px solid var(--border);border-radius:16px;padding:22px}
+.feature-icon{width:47px;height:47px;display:grid;place-items:center;background:#eaf2ff;border-radius:13px;font-size:24px;margin-bottom:14px}
+.feature h3{font-size:17px;margin-bottom:7px}
+.feature p{font-size:13px;color:var(--muted)}
+.hospital-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.hospital-card{background:white;border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:.2s}
+.hospital-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px #163b6510}
+.hospital-banner{height:115px;display:flex;align-items:center;justify-content:center;font-size:44px;background:linear-gradient(130deg,#dcecff,#e5f7f4)}
+.hospital-body{padding:17px}
+.hospital-body h3{font-size:17px;line-height:1.35;margin-bottom:6px}
+.muted{color:var(--muted);font-size:13px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.tag{font-size:11px;padding:5px 8px;border-radius:6px;background:#edf4ff;color:#255ca3;font-weight:700}
+.tag.green{background:#e6f7ef;color:#16845b}
+.tag.orange{background:#fff3df;color:#96600b}
+.bed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.bed{background:#f5f8fc;padding:9px 7px;border-radius:9px;text-align:center}
+.bed strong{display:block;font-size:18px;color:var(--blue)}
+.bed span{font-size:11px;color:var(--muted)}
+.card-actions{display:flex;gap:8px;margin-top:14px}
+.card-actions button{flex:1;padding:9px 8px;font-size:12px}
+.filters{background:white;border:1px solid var(--border);padding:17px;border-radius:15px;margin:25px 0;display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
+.field label{display:block;font-size:12px;font-weight:700;color:#52647b;margin-bottom:5px}
+.page-title{padding:35px 0 10px}
+.page-title h1{font-size:38px;letter-spacing:-1px;margin:0 0 7px}
+.page-title p{color:var(--muted)}
+.notice{border:1px solid #cce8df;background:#effaf6;padding:13px 15px;border-radius:10px;font-size:12px;color:#286650;margin:18px 0}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.panel{background:white;border:1px solid var(--border);border-radius:16px;padding:23px}
+.panel h2{font-size:22px;margin-bottom:6px}
+.panel>p{color:var(--muted);font-size:13px;margin-bottom:20px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.form-group.full{grid-column:1/-1}
+textarea.input{resize:vertical;min-height:90px}
+.admin-box{margin-top:22px;background:white;border:1px solid var(--border);border-radius:16px;padding:22px}
+.admin-box summary{font-size:18px;font-weight:800;cursor:pointer}
+.admin-content{margin-top:18px}
+footer{background:#102b4e;color:#e5edf8;margin-top:40px;padding:35px 0 20px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:25px}
+footer h3,footer h4{margin-bottom:10px}
+footer p,footer li{color:#b8c8dd;font-size:13px}
+footer ul{list-style:none}
+footer li{margin:5px 0;cursor:pointer}
+.footer-bottom{border-top:1px solid #314765;margin-top:25px;padding-top:16px;font-size:12px;color:#b8c8dd}
+.modal-backdrop{position:fixed;inset:0;background:#0c203bc4;z-index:50;display:none;align-items:center;justify-content:center;padding:18px}
+.modal-backdrop.open{display:flex}
+.modal{width:min(620px,100%);max-height:90vh;overflow:auto;background:white;border-radius:18px;padding:25px;position:relative}
+.modal-close{position:absolute;right:17px;top:12px;border:0;background:#edf2f8;border-radius:50%;width:34px;height:34px;font-size:21px}
+.modal h2{padding-right:40px;margin-bottom:8px}
+.modal h3{font-size:16px;margin:18px 0 8px}
+.modal p{color:var(--muted);font-size:14px}
+.empty{grid-column:1/-1;text-align:center;padding:40px;background:white;border-radius:15px;color:var(--muted)}
+@media(max-width:900px){
+ .hero-grid{grid-template-columns:1fr}.hero-art{min-height:240px}.hero-art img{height:260px}
+ .feature-grid{grid-template-columns:repeat(2,1fr)}.hospital-grid{grid-template-columns:repeat(2,1fr)}
+ .filters{grid-template-columns:repeat(2,1fr)}.filters .field:first-child{grid-column:1/-1}
+}
+@media(max-width:600px){
+ .nav{padding:13px 16px}.logo{font-size:22px}.navlinks{display:none;position:absolute;top:61px;left:0;right:0;background:white;padding:18px;box-shadow:0 10px 15px #102b4e12;flex-direction:column;align-items:stretch}
+ .navlinks.show{display:flex}.mobile-menu{display:inline-block;border:1px solid var(--border);background:white;border-radius:8px;padding:8px 10px}
+ .nav>.btn{display:none}.container{padding:0 16px}.hero{padding:42px 0 35px}
+ h1{letter-spacing:-1.3px}.hero-art{min-height:200px}.hero-art img{height:220px}
+ .stats{grid-template-columns:repeat(2,1fr)}.section{padding:35px 0}.section-head h2{font-size:24px}
+ .feature-grid,.hospital-grid,.two-col{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.filters .field:first-child{grid-column:auto}
+ .form-grid{grid-template-columns:1fr}.form-group.full{grid-column:auto}.footer-grid{grid-template-columns:1fr}
+ .page-title h1{font-size:31px}.hospital-card{max-width:100%}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a href="#home" class="logo" onclick="showPage('home')">Medi<span>Find</span></a>
+    <div class="navlinks" id="navlinks">
+      <button class="active" data-page="home" onclick="showPage('home')">Home</button>
+      <button data-page="hospitals" onclick="showPage('hospitals')">Find Hospitals</button>
+      <button data-page="services" onclick="showPage('services')">Services & Requests</button>
+    </div>
+    <button class="btn" onclick="showPage('hospitals')">Find a Hospital →</button>
+    <button class="mobile-menu" onclick="document.getElementById('navlinks').classList.toggle('show')">☰</button>
+  </nav>
+</header>
+
+<!-- PAGE 1: HOME -->
+<main id="home" class="page active">
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">Healthcare discovery, made simpler</div>
+          <h1>Find the right care.<br><span>With more clarity.</span></h1>
+          <p>Explore hospitals, compare facilities, review listed bed information and discover healthcare services in one convenient place.</p>
+          <div class="hero-actions">
+            <button class="btn" onclick="showPage('hospitals')">Explore Hospitals →</button>
+            <button class="btn secondary" onclick="showPage('services')">Request Assistance</button>
+          </div>
+          <div class="searchbox">
+            <label for="homeSearch" style="display:block;font-weight:700;margin-bottom:9px">What hospital are you looking for?</label>
+            <div class="searchrow">
+              <input id="homeSearch" class="input" placeholder="Search by hospital, area or speciality..." onkeydown="if(event.key==='Enter')homeSearch()">
+              <button class="btn" onclick="homeSearch()">Search</button>
+            </div>
+          </div>
+        </div>
+        <div class="hero-art">
+          <div class="art-placeholder">🏥</div>
+          <div class="floating one">📍 Hospital discovery</div>
+          <div class="floating two">🩺 Care information in one place</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="stats">
+      <div class="stat"><strong>22+</strong><span>Hospital listings</span></div>
+      <div class="stat"><strong>4</strong><span>Care categories</span></div>
+      <div class="stat"><strong>24/7</strong><span>Emergency service search</span></div>
+      <div class="stat"><strong>1 place</strong><span>To compare facilities</span></div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-head">
+      <div><div class="eyebrow">What you can do</div><h2>Healthcare information, organised</h2><p>Explore your options before contacting a hospital.</p></div>
+    </div>
+    <div class="feature-grid">
+      <article class="feature"><div class="feature-icon">🔎</div><h3>Find Hospitals</h3><p>Search hospital listings by name, locality and type.</p></article>
+      <article class="feature"><div class="feature-icon">🛏️</div><h3>Bed Information</h3><p>Review listed general, ICU and oxygen-support information.</p></article>
+      <article class="feature"><div class="feature-icon">👨‍⚕️</div><h3>Doctors & Services</h3><p>Explore listed specialities, doctors and facilities.</p></article>
+      <article class="feature"><div class="feature-icon">📍</div><h3>Location & Directions</h3><p>Open map directions and plan how to contact or reach a hospital.</p></article>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-head">
+      <div><div class="eyebrow">Explore care options</div><h2>Featured hospitals</h2><p>A selection from the hospital directory.</p></div>
+      <button class="btn secondary" onclick="showPage('hospitals')">View All Hospitals →</button>
+    </div>
+    <div class="hospital-grid" id="featuredHospitals"></div>
+    <div class="notice">Hospital listings and bed figures shown here are illustrative and may not reflect current availability. Always contact the hospital directly to verify services and beds. Requests submitted on this website are not confirmed bookings.</div>
+  </section>
+</main>
+
+<!-- PAGE 2: HOSPITAL DIRECTORY -->
+<main id="hospitals" class="page">
+  <section class="container">
+    <div class="page-title">
+      <div class="eyebrow">Hospital directory</div>
+      <h1>Find hospitals near your needs</h1>
+      <p>Compare listed services, hospital types and bed information.</p>
+    </div>
+
+    <div class="filters">
+      <div class="field"><label for="hospitalSearch">Search</label><input class="input" id="hospitalSearch" placeholder="Hospital, area or speciality..." oninput="renderHospitals()"></div>
+      <div class="field"><label for="typeFilter">Hospital type</label><select class="input" id="typeFilter" onchange="renderHospitals()"><option value="">All types</option><option>Government</option><option>Private</option></select></div>
+      <div class="field"><label for="bedFilter">Bed category</label><select class="input" id="bedFilter" onchange="renderHospitals()"><option value="">Any category</option><option value="general">General beds</option><option value="icu">ICU</option><option value="oxygen">Oxygen support</option><option value="emergency">Emergency</option></select></div>
+      <div class="field"><label for="serviceFilter">Speciality</label><select class="input" id="serviceFilter" onchange="renderHospitals()"><option value="">All services</option><option>Emergency</option><option>Cardiology</option><option>Orthopaedics</option><option>Maternity</option><option>Paediatrics</option><option>General Medicine</option></select></div>
+      <button class="btn" onclick="resetFilters()">Reset</button>
+    </div>
+    <div class="section-head">
+      <div><h2>Hospital listings</h2><p id="resultCount">Loading hospitals...</p></div>
+      <select class="input" style="width:auto" id="sortFilter" onchange="renderHospitals()"><option value="name">Sort: Name</option><option value="beds">Sort: Listed beds</option></select>
+    </div>
+    <div class="hospital-grid" id="allHospitals"></div>
+    <div class="notice">Availability figures are illustrative, not live-verified. Please call the hospital before travelling. MediFind does not itself confirm bed reservations or medical appointments.</div>
+  </section>
+</main>
+
+<!-- PAGE 3: SERVICES AND REQUESTS -->
+<main id="services" class="page">
+  <section class="container">
+    <div class="page-title">
+      <div class="eyebrow">Services & assistance</div>
+      <h1>Take the next step with confidence</h1>
+      <p>Send a request or explore how MediFind helps organise healthcare information.</p>
+    </div>
+
+    <div class="two-col section">
+      <form class="panel" onsubmit="submitRequest(event,'bed')">
+        <h2>🛏️ Bed assistance request</h2>
+        <p>Share your requirements so the relevant hospital can be contacted separately.</p>
+        <div class="form-grid">
+          <div class="form-group full"><label for="bedHospital">Select hospital</label><select class="input" id="bedHospital" required><option value="">Choose a hospital</option></select></div>
+          <div class="form-group"><label for="bedName">Your name</label><input class="input" id="bedName" required placeholder="Full name"></div>
+          <div class="form-group"><label for="bedPhone">Contact number</label><input class="input" id="bedPhone" type="tel" required pattern="[0-9+\-\s]{8,16}" placeholder="Phone number"></div>
+          <div class="form-group"><label for="bedCategory">Bed category</label><select class="input" id="bedCategory" required><option value="">Select category</option><option>General bed</option><option>ICU</option><option>Oxygen support</option><option>Emergency assessment</option></select></div>
+          <div class="form-group"><label for="bedUrgency">Priority</label><select class="input" id="bedUrgency"><option>As soon as possible</option><option>Within 24 hours</option><option>Information only</option></select></div>
+          <div class="form-group full"><label for="bedNotes">Additional details (optional)</label><textarea class="input" id="bedNotes" placeholder="Briefly describe your request. Avoid entering unnecessary sensitive medical details."></textarea></div>
+        </div>
+        <button class="btn" type="submit">Submit Bed Request</button>
+      </form>
+
+      <form class="panel" onsubmit="submitRequest(event,'appointment')">
+        <h2>🩺 Doctor appointment request</h2>
+        <p>Send your preferred speciality and contact details for follow-up.</p>
+        <div class="form-grid">
+          <div class="form-group full"><label for="apptHospital">Select hospital</label><select class="input" id="apptHospital" required><option value="">Choose a hospital</option></select></div>
+          <div class="form-group"><label for="apptName">Your name</label><input class="input" id="apptName" required placeholder="Full name"></div>
+          <div class="form-group"><label for="apptPhone">Contact number</label><input class="input" id="apptPhone" type="tel" required pattern="[0-9+\-\s]{8,16}" placeholder="Phone number"></div>
+          <div class="form-group"><label for="apptSpeciality">Speciality</label><select class="input" id="apptSpeciality" required><option value="">Select speciality</option><option>General Medicine</option><option>Cardiology</option><option>Orthopaedics</option><option>Maternity</option><option>Paediatrics</option><option>Emergency</option></select></div>
+          <div class="form-group"><label for="apptDate">Preferred date</label><input class="input" id="apptDate" type="date" required></div>
+          <div class="form-group full"><label for="apptNotes">Additional note (optional)</label><textarea class="input" id="apptNotes" placeholder="Preferred time or other non-sensitive details"></textarea></div>
+        </div>
+        <button class="btn" type="submit">Submit Appointment Request</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>How MediFind works</h2>
+      <p>From searching to contacting a healthcare provider.</p>
+      <div class="feature-grid">
+        <article class="feature"><div class="feature-icon">1</div><h3>Search</h3><p>Find a hospital by name, category or speciality.</p></article>
+        <article class="feature"><div class="feature-icon">2</div><h3>Compare</h3><p>Review listed services and facility information.</p></article>
+        <article class="feature"><div class="feature-icon">3</div><h3>Contact</h3><p>Use the available contact or directions options.</p></article>
+        <article class="feature"><div class="feature-icon">4</div><h3>Request</h3><p>Submit your interest in a bed or appointment.</p></article>
+      </div>
+    </div>
+
+    <details class="admin-box">
+      <summary>⚙️ Hospital availability management</summary>
+      <div class="admin-content">
+        <p class="muted">This local management panel lets you change figures shown in the current browser session. It does not update a hospital's actual systems or publish changes to other users.</p>
+        <div class="form-grid" style="margin-top:18px">
+          <div class="form-group full"><label for="adminHospital">Hospital</label><select class="input" id="adminHospital"></select></div>
+          <div class="form-group"><label for="adminGeneral">General beds (listed)</label><input class="input" id="adminGeneral" type="number" min="0" value="0"></div>
+          <div class="form-group"><label for="adminICU">ICU beds (listed)</label><input class="input" id="adminICU" type="number" min="0" value="0"></div>
+          <div class="form-group"><label for="adminOxygen">Oxygen support beds (listed)</label><input class="input" id="adminOxygen" type="number" min="0" value="0"></div>
+          <div class="form-group"><label for="adminEmergency">Emergency service</label><select class="input" id="adminEmergency"><option value="true">Listed</option><option value="false">Not listed</option></select></div>
+        </div>
+        <button class="btn" onclick="updateAvailability()">Update Displayed Information</button>
+        <span id="adminMessage" class="muted" style="margin-left:10px"></span>
+      </div>
+    </details>
+
+    <div class="notice">Important: Requests are not automatically sent to hospitals and do not constitute a confirmed reservation or appointment. For urgent medical help, contact local emergency services or the hospital directly. Verify bed availability, doctor schedules and services before travelling.</div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div><div class="logo" style="color:white">Medi<span>Find</span></div><p style="margin-top:10px;max-width:360px">Helping people explore hospital options, understand listed facilities and take the next step towards care.</p></div>
+      <div><h4>Explore</h4><ul><li onclick="showPage('home')">Home</li><li onclick="showPage('hospitals')">Find Hospitals</li><li onclick="showPage('services')">Services & Requests</li></ul></div>
+      <div><h4>Important</h4><p>Verify all hospital information directly with the provider. MediFind is an information interface and does not provide medical advice or confirm availability.</p></div>
+    </div>
+    <div class="footer-bottom">© 2026 MediFind · Healthcare discovery made simpler</div>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="modalBackdrop" onclick="if(event.target===this)closeModal()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+const hospitals = [
+ {id:1,name:"City Care Medical Centre",type:"Private",area:"Greater Noida",address:"Knowledge Park area, Greater Noida, Uttar Pradesh",phone:"+91 120 400 1001",general:18,icu:5,oxygen:8,emergency:true,services:["Emergency","General Medicine","Orthopaedics"],doctors:["Dr. A. Sharma — General Medicine","Dr. R. Verma — Orthopaedics"],facilities:["Emergency assessment","Diagnostic services","Pharmacy information"],emoji:"🏥"},
+ {id:2,name:"LifeLine Multispeciality Centre",type:"Private",area:"Greater Noida",address:"Pari Chowk area, Greater Noida, Uttar Pradesh",phone:"+91 120 400 1002",general:14,icu:4,oxygen:6,emergency:true,services:["Emergency","Cardiology","General Medicine"],doctors:["Dr. K. Mehta — Cardiology","Dr. S. Gupta — General Medicine"],facilities:["Multispeciality consultations","Diagnostic services"],emoji:"🩺"},
+ {id:3,name:"Sunrise Health Centre",type:"Private",area:"Noida",address:"Sector 62 area, Noida, Uttar Pradesh",phone:"+91 120 400 1003",general:20,icu:3,oxygen:7,emergency:true,services:["Emergency","Paediatrics","General Medicine"],doctors:["Dr. N. Singh — Paediatrics","Dr. P. Jain — General Medicine"],facilities:["Family healthcare","Laboratory services"],emoji:"🌅"},
+ {id:4,name:"Green Valley Hospital",type:"Private",area:"Greater Noida",address:"Sector Alpha area, Greater Noida, Uttar Pradesh",phone:"+91 120 400 1004",general:16,icu:6,oxygen:9,emergency:true,services:["Emergency","Orthopaedics","Cardiology"],doctors:["Dr. V. Rao — Orthopaedics","Dr. M. Kapoor — Cardiology"],facilities:["Imaging information","Emergency services"],emoji:"🌿"},
+ {id:5,name:"Metro Family Hospital",type:"Private",area:"Noida",address:"Sector 50 area, Noida, Uttar Pradesh",phone:"+91 120 400 1005",general:12,icu:2,oxygen:4,emergency:false,services:["General Medicine","Maternity","Paediatrics"],doctors:["Dr. T. Arora — Maternity","Dr. B. Das — Paediatrics"],facilities:["Family medicine","Maternity consultations"],emoji:"🚑"},
+ {id:6,name:"Hope Multispeciality Hospital",type:"Private",area:"Greater Noida",address:"Surajpur area, Greater Noida, Uttar Pradesh",phone:"+91 120 400 1006",general:25,icu:7,oxygen:10,emergency:true,services:["Emergency","Cardiology","Orthopaedics"],doctors:["Dr. R. Khanna — Cardiology","Dr. P. Yadav — Orthopaedics"],facilities:["Specialist consultations","Diagnostic services"],emoji:"💙"},
+ {id:7,name:"Shanti Medical Centre",type:"Government",area:"Greater Noida",address:"Central Greater Noida, Uttar Pradesh",phone:"+91 120 400 1007",general:30,icu:5,oxygen:12,emergency:true,services:["Emergency","General Medicine","Maternity"],doctors:["Dr. S. Mishra — General Medicine","Dr. L. Joshi — Maternity"],facilities:["General outpatient care","Emergency assessment"],emoji:"🏛️"},
+ {id:8,name:"Aarogya Hospital",type:"Private",area:"Noida",address:"Sector 18 area, Noida, Uttar Pradesh",phone:"+91 120 400 1008",general:17,icu:4,oxygen:6,emergency:true,services:["Emergency","General Medicine","Cardiology"],doctors:["Dr. A. Bansal — General Medicine","Dr. D. Roy — Cardiology"],facilities:["Medical consultations","Diagnostics"],emoji:"🩹"},
+ {id:9,name:"People's Health Centre",type:"Government",area:"Noida",address:"Sector 39 area, Noida, Uttar Pradesh",phone:"+91 120 400 1009",general:35,icu:8,oxygen:14,emergency:true,services:["Emergency","General Medicine","Paediatrics"],doctors:["Dr. N. Tyagi — General Medicine","Dr. F. Khan — Paediatrics"],facilities:["Outpatient services","Emergency assessment"],emoji:"🏥"},
+ {id:10,name:"Krishna Care Hospital",type:"Private",area:"Greater Noida",address:"Alpha Commercial Belt, Greater Noida, Uttar Pradesh",phone:"+91 120 400 1010",general:13,icu:3,oxygen:5,emergency:false,services:["General Medicine","Orthopaedics"],doctors:["Dr. H. Kumar — Orthopaedics","Dr. J. Sinha — General Medicine"],facilities:["Orthopaedic consultations","General care"],emoji:"💠"},
+ {id:11,name:"Yamuna Medical Centre",type:"Government",area:"Greater Noida",address:"Knowledge Park area, Greater Noida, Uttar Pradesh",phone:"+91 120 400 1011",general:28,icu:6,oxygen:11,emergency:true,services:["Emergency","General Medicine","Cardiology"],doctors:["Dr. M. Saini — General Medicine","Dr. P. Chawla — Cardiology"],facilities:["Outpatient care","Emergency services"],emoji:"🏛️"},
+ {id:12,name:"Vrindavan Health Institute",type:"Private",area:"Vrindavan",address:"Mathura-Vrindavan Road, Vrindavan, Uttar Pradesh",phone:"+91 565 400 1012",general:19,icu:4,oxygen:7,emergency:true,services:["Emergency","Maternity","Paediatrics"],doctors:["Dr. K. Sharma — Maternity","Dr. A. Mishra — Paediatrics"],facilities:["Maternity consultations","Diagnostic services"],emoji:"🌼"},
+ {id:13,name:"NCR Emergency Care",type:"Private",area:"Noida",address:"Sector 51 area, Noida, Uttar Pradesh",phone:"+91 120 400 1013",general:10,icu:9,oxygen:10,emergency:true,services:["Emergency","Cardiology","General Medicine"],doctors:["Dr. V. Malhotra — Emergency Care","Dr. N. Paul — Cardiology"],facilities:["Emergency assessment","Critical care information"],emoji:"🚨"},
+ {id:14,name:"Silver Oak Hospital",type:"Private",area:"Greater Noida",address:"Sector Beta area, Greater Noida, Uttar Pradesh",phone:"+91 120 400 1014",general:15,icu:4,oxygen:6,emergency:false,services:["General Medicine","Orthopaedics","Maternity"],doctors:["Dr. R. Saxena — Orthopaedics","Dr. P. Lal — Maternity"],facilities:["Consultation services","Diagnostic information"],emoji:"🌳"},
+ {id:15,name:"Family First Medical Centre",type:"Private",area:"Noida",address:"Sector 76 area, Noida, Uttar Pradesh",phone:"+91 120 400 1015",general:11,icu:2,oxygen:4,emergency:false,services:["General Medicine","Paediatrics","Maternity"],doctors:["Dr. S. Kapoor — Paediatrics","Dr. A. Rao — General Medicine"],facilities:["Family consultations","Preventive care information"],emoji:"👨‍👩‍👧"},
+ {id:16,name:"Blue Cross Health Centre",type:"Private",area:"Greater Noida",address:"Pari Chowk area, Greater Noida, Uttar Pradesh",phone:"+91 120 400 1016",general:21,icu:5,oxygen:8,emergency:true,services:["Emergency","Cardiology","Orthopaedics"],doctors:["Dr. D. Mehra — Cardiology","Dr. V. Bhat — Orthopaedics"],facilities:["Specialist consultations","Emergency services"],emoji:"✚"},
+ {id:17,name:"New Hope Medical Institute",type:"Government",area:"Noida",address:"Sector 30 area, Noida, Uttar Pradesh",phone:"+91 120 400 1017",general:32,icu:7,oxygen:13,emergency:true,services:["Emergency","General Medicine","Paediatrics"],doctors:["Dr. T. Sharma — General Medicine","Dr. R. Sen — Paediatrics"],facilities:["Outpatient care","Emergency assessment"],emoji:"🏛️"},
+ {id:18,name:"Lotus Women's Health Centre",type:"Private",area:"Greater Noida",address:"Sector Alpha area, Greater Noida, Uttar Pradesh",phone:"+91 120 400 1018",general:12,icu:2,oxygen:4,emergency:false,services:["Maternity","General Medicine"],doctors:["Dr. M. Agarwal — Maternity","Dr. P. Dutta — Women's Health"],facilities:["Women's health consultations","Maternity services"],emoji:"🌸"},
+ {id:19,name:"Unity Medical Centre",type:"Private",area:"Noida",address:"Sector 15 area, Noida, Uttar Pradesh",phone:"+91 120 400 1019",general:16,icu:4,oxygen:7,emergency:true,services:["Emergency","General Medicine","Orthopaedics"],doctors:["Dr. J. Tandon — General Medicine","Dr. S. Pal — Orthopaedics"],facilities:["Medical consultations","Diagnostic services"],emoji:"🤝"},
+ {id:20,name:"Rapid Response Hospital",type:"Private",area:"Greater Noida",address:"Surajpur area, Greater Noida, Uttar Pradesh",phone:"+91 120 400 1020",general:14,icu:8,oxygen:9,emergency:true,services:["Emergency","Cardiology","General Medicine"],doctors:["Dr. A. Gill — Emergency Care","Dr. R. Nair — Cardiology"],facilities:["Emergency assessment","Critical care information"],emoji:"🚑"},
+ {id:21,name:"Sanjeevani Medical Centre",type:"Government",area:"Vrindavan",address:"Vrindavan Road area, Mathura, Uttar Pradesh",phone:"+91 565 400 1021",general:26,icu:4,oxygen:10,emergency:true,services:["Emergency","General Medicine","Maternity"],doctors:["Dr. S. Pathak — General Medicine","Dr. N. Rawat — Maternity"],facilities:["Outpatient care","Emergency assessment"],emoji:"🏛️"},
+ {id:22,name:"Riverfront Health Hospital",type:"Private",area:"Mathura",address:"Mathura city, Uttar Pradesh",phone:"+91 565 400 1022",general:18,icu:3,oxygen:6,emergency:false,services:["General Medicine","Paediatrics","Orthopaedics"],doctors:["Dr. P. Mathur — Paediatrics","Dr. K. Anand — Orthopaedics"],facilities:["General consultations","Diagnostic information"],emoji:"🌊"}
+];
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.navlinks button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+  document.getElementById('navlinks').classList.remove('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function homeSearch(){
+  document.getElementById('hospitalSearch').value=document.getElementById('homeSearch').value;
+  showPage('hospitals');renderHospitals();
+}
+function esc(value){
+  return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function bedCount(h){return h.general+h.icu+h.oxygen}
+function card(h){
+  return `<article class="hospital-card">
+    <div class="hospital-banner">${h.emoji}</div>
+    <div class="hospital-body">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:start">
+        <h3>${esc(h.name)}</h3>
+        <span class="tag ${h.type==='Government'?'green':''}">${esc(h.type)}</span>
+      </div>
+      <p class="muted">📍 ${esc(h.area)} · ${esc(h.services.slice(0,2).join(', '))}</p>
+      <div class="tags">${h.emergency?'<span class="tag green">Emergency listed</span>':'<span class="tag orange">Confirm emergency service</span>'}
+        <span class="tag">Hospital profile</span></div>
+      <div class="bed-grid">
+        <div class="bed"><strong>${h.general}</strong><span>General</span></div>
+        <div class="bed"><strong>${h.icu}</strong><span>ICU</span></div>
+        <div class="bed"><strong>${h.oxygen}</strong><span>Oxygen</span></div>
+      </div>
+      <p class="muted">Listed figures only — call to verify current availability.</p>
+      <div class="card-actions">
+        <button class="btn secondary" onclick="openDetails(${h.id})">View Details</button>
+        <button class="btn" onclick="requestBed(${h.id})">Request Bed</button>
+      </div>
+    </div>
+  </article>`;
+}
+function renderHospitals(){
+  const q=(document.getElementById('hospitalSearch')?.value||'').toLowerCase().trim();
+  const type=document.getElementById('typeFilter')?.value||'';
+  const bed=document.getElementById('bedFilter')?.value||'';
+  const service=document.getElementById('serviceFilter')?.value||'';
+  const sort=document.getElementById('sortFilter')?.value||'name';
+  let list=hospitals.filter(h=>{
+    const text=[h.name,h.area,h.address,h.type,...h.services].join(' ').toLowerCase();
+    const matchQ=!q||text.includes(q);
+    const matchType=!type||h.type===type;
+    const matchService=!service||h.services.includes(service);
+    const matchBed=!bed||(bed==='general'&&h.general>0)||(bed==='icu'&&h.icu>0)||(bed==='oxygen'&&h.oxygen>0)||(bed==='emergency'&&h.emergency);
+    return matchQ&&matchType&&matchService&&matchBed;
+  });
+  if(sort==='beds')list.sort((a,b)=>bedCount(b)-bedCount(a));
+  else list.sort((a,b)=>a.name.localeCompare(b.name));
+  document.getElementById('resultCount').textContent=`${list.length} hospital listing${list.length===1?'':'s'} found`;
+  document.getElementById('allHospitals').innerHTML=list.length?list.map(card).join(''):'<div class="empty">No matching hospitals found. Try changing your search or filters.</div>';
+}
+function resetFilters(){
+  ['hospitalSearch','typeFilter','bedFilter','serviceFilter'].forEach(id=>document.getElementById(id).value='');
+  renderHospitals();
+}
+function openDetails(id){
+  const h=hospitals.find(x=>x.id===id);if(!h)return;
+  document.getElementById('modalContent').innerHTML=`
+    <div class="eyebrow">Hospital profile</div><h2 id="modalTitle">${esc(h.name)}</h2>
+    <p>${esc(h.type)} · ${esc(h.area)}</p>
+    <h3>Location</h3><p>${esc(h.address)}</p>
+    <h3>Listed bed information</h3>
+    <div class="bed-grid"><div class="bed"><strong>${h.general}</strong><span>General beds</span></div><div class="bed"><strong>${h.icu}</strong><span>ICU beds</span></div><div class="bed"><strong>${h.oxygen}</strong><span>Oxygen support</span></div></div>
+    <p>These figures are illustrative and must be confirmed directly with the hospital.</p>
+    <h3>Services</h3><div class="tags">${h.services.map(s=>`<span class="tag">${esc(s)}</span>`).join('')}</div>
+    <h3>Listed doctors and specialities</h3><ul style="padding-left:20px">${h.doctors.map(d=>`<li>${esc(d)}</li>`).join('')}</ul>
+    <h3>Facilities information</h3><ul style="padding-left:20px">${h.facilities.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>
+    <h3>Contact information</h3><p>${esc(h.phone)}</p>
+    <div class="card-actions"><button class="btn secondary" onclick="window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(${JSON.stringify(h.address)}),'_blank','noopener')">Directions</button>
+    <button class="btn" onclick="closeModal();requestBed(${h.id})">Request Bed</button>
+    <button class="btn teal" onclick="closeModal();requestAppointment(${h.id})">Appointment</button></div>`;
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+function closeModal(){document.getElementById('modalBackdrop').classList.remove('open')}
+function requestBed(id){
+  document.getElementById('bedHospital').value=String(id);
+  showPage('services');document.getElementById('bedName').focus();
+}
+function requestAppointment(id){
+  document.getElementById('apptHospital').value=String(id);
+  showPage('services');document.getElementById('apptName').focus();
+}
+function populateHospitalSelects(){
+  ['bedHospital','apptHospital','adminHospital'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.innerHTML=(id==='adminHospital'?'':'<option value="">Choose a hospital</option>')+
+      hospitals.map(h=>`<option value="${h.id}">${esc(h.name)}</option>`).join('');
+  });
+}
+function submitRequest(event,type){
+  event.preventDefault();
+  const isBed=type==='bed';
+  const hospitalId=Number(document.getElementById(isBed?'bedHospital':'apptHospital').value);
+  const h=hospitals.find(x=>x.id===hospitalId);
+  if(!h){alert('Please select a hospital.');return}
+  const form=event.target;
+  const ref='MF-'+Date.now().toString().slice(-8);
+  alert(`${isBed?'Bed assistance':'Appointment'} request prepared.\nReference: ${ref}\nHospital: ${h.name}\n\nThis website does not transmit the request to the hospital or confirm a booking. Please contact the hospital directly to arrange care.`);
+  form.reset();
+}
+function updateAdminFields(){
+  const h=hospitals.find(x=>x.id===Number(document.getElementById('adminHospital').value));
+  if(!h)return;
+  document.getElementById('adminGeneral').value=h.general;
+  document.getElementById('adminICU').value=h.icu;
+  document.getElementById('adminOxygen').value=h.oxygen;
+  document.getElementById('adminEmergency').value=String(h.emergency);
+}
+function updateAvailability(){
+  const h=hospitals.find(x=>x.id===Number(document.getElementById('adminHospital').value));
+  if(!h)return;
+  h.general=Math.max(0,Number(document.getElementById('adminGeneral').value)||0);
+  h.icu=Math.max(0,Number(document.getElementById('adminICU').value)||0);
+  h.oxygen=Math.max(0,Number(document.getElementById('adminOxygen').value)||0);
+  h.emergency=document.getElementById('adminEmergency').value==='true';
+  renderHospitals();renderFeatured();
+  document.getElementById('adminMessage').textContent='Displayed figures updated for this session.';
+}
+function renderFeatured(){
+  document.getElementById('featuredHospitals').innerHTML=[hospitals[0],hospitals[5],hospitals[8]].map(card).join('');
+}
+document.getElementById('adminHospital').addEventListener('change',updateAdminFields);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+const today=new Date();
+document.getElementById('apptDate').min=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+populateHospitalSelects();
+renderFeatured();
+renderHospitals();
+updateAdminFields();
+</script>
+</body>
+</html>
